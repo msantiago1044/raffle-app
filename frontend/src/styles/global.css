@@ -1,0 +1,111 @@
+:root {
+  --color-available: #22c55e;
+  --color-pending: #eab308;
+  --color-sold: #6b7280;
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-yellow: #fbbf24;
+}
+
+body {
+  margin: 0;
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Tarjeta Principal */
+.prize-card {
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border: 1px solid #334155;
+}
+
+/* Cronómetro */
+.timer-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.timer-box {
+  background-color: var(--bg-dark);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 15px;
+  width: 60px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+.timer-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--accent-yellow);
+  font-family: 'Bebas Neue', sans-serif;
+  line-height: 1;
+}
+.timer-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
+/* Grilla */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.number-btn {
+  padding: 12px 0;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s;
+}
+.number-btn:hover:not(:disabled) { transform: scale(1.1); }
+.available { background-color: transparent; border: 1px solid #334155; color: var(--text-muted); }
+.available:hover { background-color: var(--color-available); color: white; border-color: var(--color-available); }
+.pending { background-color: var(--color-pending); color: black; cursor: not-allowed; }
+.sold { background-color: var(--color-sold); cursor: not-allowed; }
+
+/* Stats */
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-top: 1px solid #334155;
+  border-bottom: 1px solid #334155;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+  display: flex; justify-content: center; align-items: center;
+}
+.modal-content {
+  background: var(--bg-card); padding: 30px; border-radius: 12px; text-align: center; width: 90%; max-width: 400px;
+  border: 1px solid #334155;
+}

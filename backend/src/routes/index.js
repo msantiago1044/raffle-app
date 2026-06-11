@@ -1,0 +1,14 @@
+const express = require('express');
+const auth    = require('../middleware/auth');
+const { login } = require('../controllers/authController');
+const { getConfig, updateConfig } = require('../controllers/configController');
+const { getAllTickets, reserveTicket, updateTicketStatus, getStats } = require('../controllers/ticketsController');
+const router = express.Router();
+router.post('/auth/login', login);
+router.get('/config',  getConfig);
+router.get('/tickets', getAllTickets);
+router.post('/tickets/:number/reserve', reserveTicket);
+router.put('/admin/config', auth, updateConfig);
+router.patch('/admin/tickets/:number/status', auth, updateTicketStatus);
+router.get('/admin/tickets/stats', auth, getStats);
+module.exports = router;
