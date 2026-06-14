@@ -1,8 +1,1 @@
-{ 
-  "build": { 
-    "builder": "RAILPACK" 
-  }, 
-  "deploy": { 
-    "startCommand": "node src/server.js" 
-  } 
-} 
+{"deploy":{"startCommand":"node src/server.js"}}
