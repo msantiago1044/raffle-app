@@ -1,1 +1,4 @@
-[build]`nbase = "frontend`ncommand = npm run build`npublish = dist
+[build]
+base = "frontend"
+command = "npm run build"
+publish = "dist"
