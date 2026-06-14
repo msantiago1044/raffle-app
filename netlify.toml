@@ -1,0 +1,1 @@
+[build]`nbase = "frontend`ncommand = npm run build`npublish = dist
