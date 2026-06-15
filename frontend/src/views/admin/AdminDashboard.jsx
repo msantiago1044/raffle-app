@@ -12,9 +12,9 @@ export default function AdminDashboard({ onLogout }) {
     try {
       const headers = { 'Authorization': `Bearer ${token}` };
       const [tixRes, statsRes, configRes] = await Promise.all([
-        fetch('${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/tickets'),
-        fetch('${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/admin/tickets/stats', { headers }),
-        fetch('${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/config')
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/tickets'),
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/admin/tickets/stats', { headers }),
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/config')
       ]);
       setTickets(await tixRes.json());
       setStats(await statsRes.json());
@@ -42,7 +42,7 @@ export default function AdminDashboard({ onLogout }) {
   const handleConfigUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/admin/config', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/admin/config', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(config)
