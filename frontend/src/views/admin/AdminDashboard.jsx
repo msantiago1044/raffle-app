@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
 export default function AdminDashboard({ onLogout }) {
   const [tickets, setTickets] = useState([]);
   const [stats, setStats] = useState({ available: 0, pending: 0, sold: 0, revenue: 0 });
@@ -12,9 +14,9 @@ export default function AdminDashboard({ onLogout }) {
     try {
       const headers = { 'Authorization': `Bearer ${token}` };
       const [tixRes, statsRes, configRes] = await Promise.all([
-        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/tickets'),
-        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/admin/tickets/stats', { headers }),
-        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/config')
+        fetch(`${API}/tickets`),
+        fetch(`${API}/admin/tickets/stats`, { headers }),
+        fetch(`${API}/config`)
       ]);
       setTickets(await tixRes.json());
       setStats(await statsRes.json());
@@ -28,33 +30,33 @@ export default function AdminDashboard({ onLogout }) {
 
   const changeStatus = async (number, status) => {
     try {
-      await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/admin/tickets/${number}/status`, {
+      await fetch(`${API}/admin/tickets/${number}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status })
       });
-      fetchData(); // Recargar después de cambiar
-    } catch (err) { 
-      alert('Error al cambiar estado'); 
+      fetchData();
+    } catch (err) {
+      alert('Error al cambiar estado');
     }
   };
 
   const handleConfigUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/admin/config', {
+      const res = await fetch(`${API}/admin/config`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(config)
       });
-      if(res.ok){
-         alert('Configuración actualizada correctamente ✅');
-         fetchData();
+      if (res.ok) {
+        alert('Configuración actualizada correctamente ✅');
+        fetchData();
       } else {
-         alert('Error al actualizar la configuración');
+        alert('Error al actualizar la configuración');
       }
-    } catch (err) { 
-      alert('Error de conexión al actualizar la configuración'); 
+    } catch (err) {
+      alert('Error de conexión al actualizar la configuración');
     }
   };
 
@@ -89,7 +91,6 @@ export default function AdminDashboard({ onLogout }) {
             <div style={{ textAlign: 'center' }}><p style={{ margin: 0, color: '#64748b' }}>Vendidos</p><h3 style={{ margin: '5px 0 0 0', color: '#6b7280' }}>{stats.sold}</h3></div>
             <div style={{ textAlign: 'center' }}><p style={{ margin: 0, color: '#64748b' }}>Recaudado</p><h3 style={{ margin: '5px 0 0 0', color: '#2563eb' }}>${stats.revenue}</h3></div>
           </div>
-          
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
               <thead>
@@ -98,7 +99,7 @@ export default function AdminDashboard({ onLogout }) {
                   <th style={{ padding: '12px' }}>Comprador</th>
                   <th style={{ padding: '12px' }}>Teléfono</th>
                   <th style={{ padding: '12px' }}>Estado</th>
-                  <th style={{ padding: '12px' }}>Acciones Manuales</th>
+                  <th style={{ padding: '12px' }}>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -128,22 +129,21 @@ export default function AdminDashboard({ onLogout }) {
       {activeTab === 'config' && (
         <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
           <form onSubmit={handleConfigUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <label style={{ fontWeight: 'bold' }}>Nombre del Organizador: 
+            <label style={{ fontWeight: 'bold' }}>Nombre del Organizador:
               <input type="text" value={config.organizer_name || ''} onChange={e => setConfig({...config, organizer_name: e.target.value})} style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '5px', border: '1px solid #ccc' }}/>
             </label>
-            <label style={{ fontWeight: 'bold' }}>Premio Mayor: 
+            <label style={{ fontWeight: 'bold' }}>Premio Mayor:
               <input type="text" value={config.prize || ''} onChange={e => setConfig({...config, prize: e.target.value})} style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '5px', border: '1px solid #ccc' }}/>
             </label>
-            <label style={{ fontWeight: 'bold' }}>Precio del Número ($): 
+            <label style={{ fontWeight: 'bold' }}>Precio del Número ($):
               <input type="number" value={config.ticket_price || 0} onChange={e => setConfig({...config, ticket_price: e.target.value})} style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '5px', border: '1px solid #ccc' }}/>
             </label>
-            <label style={{ fontWeight: 'bold' }}>WhatsApp (Ej: 573001234567): 
+            <label style={{ fontWeight: 'bold' }}>WhatsApp (Ej: 573001234567):
               <input type="text" value={config.whatsapp_number || ''} onChange={e => setConfig({...config, whatsapp_number: e.target.value})} style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '5px', border: '1px solid #ccc' }}/>
             </label>
-            <label style={{ fontWeight: 'bold' }}>Fecha del Sorteo: 
+            <label style={{ fontWeight: 'bold' }}>Fecha del Sorteo:
               <input type="datetime-local" value={config.draw_date ? new Date(new Date(config.draw_date).getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0,16) : ''} onChange={e => setConfig({...config, draw_date: new Date(e.target.value).toISOString()})} style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '5px', border: '1px solid #ccc' }}/>
             </label>
-            
             <button type="submit" style={{ padding: '15px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.1rem', marginTop: '10px' }}>
               Guardar Cambios
             </button>
